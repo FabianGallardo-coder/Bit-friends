@@ -38,6 +38,8 @@ async fn move_window(window: tauri::Window, x: f64, y: f64) -> Result<(), String
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
+        .plugin(tauri_plugin_updater::Builder::default().build())
         .invoke_handler(tauri::generate_handler![get_system_info, move_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

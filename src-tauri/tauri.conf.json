@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "mascota-ia",
-  "version": "0.1.0",
-  "identifier": "com.fabian.mascota-ia",
+  "productName": "Bit Friends",
+  "version": "1.0.0",
+  "identifier": "com.fabian.bit-friends",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "mascota-ia",
+        "title": "Bit Friends",
         "width": 200,
         "height": 280,
         "transparent": true,
@@ -21,17 +21,41 @@
         "resizable": false,
         "skipTaskbar": false
       }
-    ]
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' http://localhost:* https://api.openai.com https://api.anthropic.com; img-src 'self' asset: https://asset.localhost data:; style-src 'self' 'unsafe-inline'"
+    }
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["deb", "appimage", "msi", "nsis"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "linux": {
+      "deb": {
+        "depends": []
+      },
+      "appimage": {}
+    },
+    "windows": {
+      "wix": {
+        "language": "es-ES"
+      },
+      "nsis": {}
+    }
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/FabianGallardo-coder/Bit-friends/releases/latest/download/updater.json"
+      ],
+      "pubkey": ""
+    }
   }
 }

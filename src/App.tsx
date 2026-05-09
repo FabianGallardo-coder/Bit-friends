@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import Character from './components/Character'
 import ConfigPanel from './components/ConfigPanel'
 import aiService from './services/ai'
+import { loadCharacter, saveCharacter } from './services/secureStore'
 import './index.css'
 
 type CharacterType = 'anime' | 'wizard'
 type CharacterState = 'idle' | 'talking' | 'thinking' | 'happy'
 
 function App() {
-  const savedChar = localStorage.getItem('selected-character') as CharacterType | null
-  const [character, setCharacter] = useState<CharacterType>(savedChar || 'wizard')
+  const [character, setCharacter] = useState<CharacterType>('wizard')
   const [charState, setCharState] = useState<CharacterState>('idle')
   const [message, setMessage] = useState('')
   const [response, setResponse] = useState('')
@@ -18,12 +18,25 @@ function App() {
   const [startupStatus, setStartupStatus] = useState<'checking' | 'ollama' | 'api' | 'none'>('checking')
   const bubbleRef = useRef<HTMLDivElement>(null)
 
+  // Cargar personaje y config al iniciar
   useEffect(() => {
-    localStorage.setItem('selected-character', character)
+    const init = async () => {
+      await aiService.init()
+      const savedChar = await loadCharacter()
+      if (savedChar === 'anime' || savedChar === 'wizard') {
+        setCharacter(savedChar)
+      }
+    }
+    init()
+  }, [])
+
+  useEffect(() => {
+    saveCharacter(character)
   }, [character])
 
   useEffect(() => {
     const checkAI = async () => {
+      await aiService.init()
       const ollamaAvailable = await aiService.checkOllamaHealth()
       if (ollamaAvailable) {
         setStartupStatus('ollama')

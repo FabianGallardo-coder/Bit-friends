@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import aiService from '../services/ai'
+import { saveCharacter } from '../services/secureStore'
 import '../index.css'
 
 const OLLAMA_MODELS = ['llama3.2', 'mistral', 'phi3', 'codellama', 'llama3']
@@ -30,9 +31,13 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
 }) => {
   const [config, setConfig] = useState(aiService.getConfig())
   const [ollamaStatus, setOllamaStatus] = useState<'checking' | 'active' | 'inactive'>('checking')
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    if (visible) checkOllamaStatus()
+    if (visible) {
+      setConfig(aiService.getConfig())
+      checkOllamaStatus()
+    }
   }, [visible])
 
   const checkOllamaStatus = async () => {
@@ -44,10 +49,16 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
     setConfig(prev => ({ ...prev, [key]: value }))
   }
 
-  const handleSave = () => {
-    aiService.saveConfig(config)
+  const handleCharacterChange = async (char: CharacterType) => {
+    await saveCharacter(char)
+    onCharacterChange?.(char)
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    await aiService.saveConfig(config)
+    setSaving(false)
     onClose()
-    // Recargar la página para que tome los nuevos valores
     window.location.reload()
   }
 
@@ -72,20 +83,18 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
           <button className="config-panel__close" onClick={onClose}>×</button>
         </div>
 
-        {/* Estado actual de la IA */}
         <div className="config-panel__status">
           {startupStatus === 'ollama' && '🤖 IA: Ollama local'}
           {startupStatus === 'api' && '☁️ IA: API en la nube'}
           {startupStatus === 'none' && '⚠️ Sin IA configurada'}
         </div>
 
-        {/* Selector de personaje */}
         {onCharacterChange && (
           <div className="config-panel__field">
             <label>👤 Personaje:</label>
             <select 
               value={character} 
-              onChange={e => onCharacterChange(e.target.value as CharacterType)}
+              onChange={e => handleCharacterChange(e.target.value as CharacterType)}
             >
               <option value="wizard">🧙‍♂️ Merlin</option>
               <option value="anime">👩 Eve</option>
@@ -168,7 +177,9 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
           💡 <b>Recomendación:</b> Instalá Ollama desde <a href="https://ollama.com" target="_blank" rel="noopener">ollama.com</a> para IA local gratuita.
         </div>
 
-        <button className="config-panel__save" onClick={handleSave}>💾 Guardar y reiniciar</button>
+        <button className="config-panel__save" onClick={handleSave} disabled={saving}>
+          {saving ? '💾 Guardando...' : '💾 Guardar y reiniciar'}
+        </button>
         
         {onCloseApp && (
           <button className="config-panel__close-app" onClick={onCloseApp}>
