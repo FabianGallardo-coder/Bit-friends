@@ -1,3 +1,5 @@
+[![Deploy](https://github.com/FabianGallardo-coder/Bit-friends/actions/workflows/deploy.yml/badge.svg)](https://github.com/FabianGallardo-coder/Bit-friends/actions/workflows/deploy.yml)
+
 <div align="center">
   <img src="src/assets/sprite-wizard.png" width="128" alt="Bit" style="image-rendering: pixelated;">
 
