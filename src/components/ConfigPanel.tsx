@@ -32,13 +32,15 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
   const [config, setConfig] = useState(aiService.getConfig())
   const [ollamaStatus, setOllamaStatus] = useState<'checking' | 'active' | 'inactive'>('checking')
   const [saving, setSaving] = useState(false)
+  const [selectedChar, setSelectedChar] = useState<CharacterType>(character)
 
   useEffect(() => {
     if (visible) {
       setConfig(aiService.getConfig())
+      setSelectedChar(character)
       checkOllamaStatus()
     }
-  }, [visible])
+  }, [visible, character])
 
   const checkOllamaStatus = async () => {
     setOllamaStatus('checking')
@@ -49,7 +51,8 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
     setConfig(prev => ({ ...prev, [key]: value }))
   }
 
-  const handleCharacterChange = async (char: CharacterType) => {
+  const handleCharacterSelect = async (char: CharacterType) => {
+    setSelectedChar(char)
     await saveCharacter(char)
     onCharacterChange?.(char)
   }
@@ -65,9 +68,9 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
   const getStatusMessage = () => {
     switch (ollamaStatus) {
       case 'active':
-        return '🟢 Ollama activo y funcionando'
+        return '🟢 Ollama activo'
       case 'inactive':
-        return '🔴 Ollama no encontrado'
+        return '🔴 Ollama no disponible'
       case 'checking':
         return '🟡 Verificando...'
     }
@@ -84,26 +87,24 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
         </div>
 
         <div className="config-panel__status">
-          {startupStatus === 'ollama' && '🤖 IA: Ollama local'}
-          {startupStatus === 'api' && '☁️ IA: API en la nube'}
-          {startupStatus === 'none' && '⚠️ Sin IA configurada'}
+          {startupStatus === 'ollama' && '🤖 Ollama local'}
+          {startupStatus === 'api' && '☁️ API cloud'}
+          {startupStatus === 'none' && '⚠️ Sin IA'}
         </div>
 
-        {onCharacterChange && (
-          <div className="config-panel__field">
-            <label>👤 Personaje:</label>
-            <select 
-              value={character} 
-              onChange={e => handleCharacterChange(e.target.value as CharacterType)}
-            >
-              <option value="wizard">🧙‍♂️ Merlin</option>
-              <option value="anime">👩 Eve</option>
-            </select>
-          </div>
-        )}
+        <div className="config-panel__field">
+          <label>👤 Personaje:</label>
+          <select 
+            value={selectedChar}
+            onChange={e => handleCharacterSelect(e.target.value as CharacterType)}
+          >
+            <option value="wizard">🧙‍♂️ Merlin</option>
+            <option value="anime">👩 Eve</option>
+          </select>
+        </div>
 
         <div className="config-panel__section">
-          <div className="config-panel__section-title">🔮 Ollama (IA Local)</div>
+          <div className="config-panel__section-title">🔮 Ollama</div>
           <div className="config-panel__status-small">{getStatusMessage()}</div>
           
           <div className="config-panel__field">
@@ -112,7 +113,6 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
               type="text" 
               value={config.ollamaUrl} 
               onChange={e => handleChange('ollamaUrl', e.target.value)}
-              placeholder="http://localhost:11434"
             />
           </div>
 
@@ -126,17 +126,13 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
             </select>
           </div>
 
-          <button 
-            className="config-panel__test" 
-            onClick={checkOllamaStatus}
-            type="button"
-          >
-            🔄 Probar conexión
+          <button className="config-panel__test" onClick={checkOllamaStatus}>
+            🔄 Probar
           </button>
         </div>
 
         <div className="config-panel__section">
-          <div className="config-panel__section-title">☁️ API Cloud (Opcional)</div>
+          <div className="config-panel__section-title">☁️ API Cloud</div>
           
           <div className="config-panel__field">
             <label>Proveedor:</label>
@@ -156,7 +152,6 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
                   type="password" 
                   value={config.cloudApiKey} 
                   onChange={e => handleChange('cloudApiKey', e.target.value)}
-                  placeholder={config.cloudProvider === 'openai' ? 'sk-...' : 'sk-ant-...'}
                 />
               </div>
 
@@ -166,26 +161,19 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
                   type="text" 
                   value={config.cloudModel} 
                   onChange={e => handleChange('cloudModel', e.target.value)}
-                  placeholder={config.cloudProvider === 'openai' ? 'gpt-4o-mini' : 'claude-3-haiku-20240307'}
                 />
               </div>
             </>
           )}
         </div>
 
-        <div className="config-panel__help">
-          💡 <b>Recomendación:</b> Instalá Ollama desde <a href="https://ollama.com" target="_blank" rel="noopener">ollama.com</a> para IA local gratuita.
-        </div>
-
-        <button className="config-panel__save" onClick={handleSave} disabled={saving}>
-          {saving ? '💾 Guardando...' : '💾 Guardar y reiniciar'}
+        <button className="config-panel__save" onClick={handleSave}>
+          {saving ? 'Guardando...' : '💾 Guardar'}
         </button>
-        
-        {onCloseApp && (
-          <button className="config-panel__close-app" onClick={onCloseApp}>
-            ❌ Cerrar Bit
-          </button>
-        )}
+
+        <button className="config-panel__close-app" onClick={onCloseApp}>
+          ❌ Cerrar Bit
+        </button>
       </div>
     </div>
   )

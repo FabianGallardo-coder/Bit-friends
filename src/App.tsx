@@ -18,7 +18,6 @@ function App() {
   const [startupStatus, setStartupStatus] = useState<'checking' | 'ollama' | 'api' | 'none'>('checking')
   const bubbleRef = useRef<HTMLDivElement>(null)
 
-  // Cargar personaje y config al iniciar
   useEffect(() => {
     const init = async () => {
       await aiService.init()
@@ -78,7 +77,7 @@ function App() {
 
   const handleCloseApp = async () => {
     try {
-      const { getCurrentWindow } = await import('@tauri-apps/api/window')
+      const { getCurrentWindow } = await import('@tauri-apps/api/core')
       await getCurrentWindow().close()
     } catch (error) {
       console.error('Cannot close app:', error)
@@ -99,7 +98,6 @@ function App() {
     const texto = message.trim()
     if (!texto) return
 
-    // Comando /bye => cerrar app
     if (texto.toLowerCase() === '/bye') {
       setResponse('¡Chau! Nos vemos 👋')
       setCharState('happy')
@@ -130,6 +128,10 @@ function App() {
     if (e.key === 'Enter') handleSend()
   }
 
+  const handleCloseConfig = () => {
+    setShowConfig(false)
+  }
+
   return (
     <div className="app-container" onContextMenu={handleRightClick}>
       <div className="ai-status" title={
@@ -147,7 +149,7 @@ function App() {
       {showConfig && (
         <ConfigPanel
           visible={showConfig}
-          onClose={() => setShowConfig(false)}
+          onClose={handleCloseConfig}
           onCloseApp={handleCloseApp}
           character={character}
           onCharacterChange={setCharacter}
@@ -155,7 +157,6 @@ function App() {
         />
       )}
 
-      {/* Globo de diálogo */}
       {response !== '' && (
         <div className="speech-bubble" ref={bubbleRef}>
           <div className="speech-bubble__arrow" />
@@ -163,13 +164,12 @@ function App() {
         </div>
       )}
 
-      {/* Personaje */}
       <div onClick={handleClick} className="character-wrapper">
         <Character character={character} state={charState} />
       </div>
 
-      {/* Input y botón */}
-      {isOpen && !showConfig && (
+      {/* Input siempre visible cuando hay algo abierto o escribiendo */}
+      {(isOpen || message.trim()) && (
         <div className="chat-row">
           <input
             className="chat-input"
@@ -177,7 +177,7 @@ function App() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Escribí algo..."
+            placeholder="Escribí algo... (/bye para salir)"
             autoFocus
           />
           <button className="send-btn" onClick={handleSend}>→</button>
