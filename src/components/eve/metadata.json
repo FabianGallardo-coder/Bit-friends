@@ -1,0 +1,44 @@
+{
+  "character": {
+    "id": "e447a0f5-ddfd-4dd9-b7f6-9a4cccf6968b",
+    "name": "Pixel art sprite sheet, anime girl character, long golden blonde hair  reaching to knees, dark black dress/coat, black boots, pale skin,  small frame, cute face with amber eyes.  Style: 16-bit RPG anime, clean pixel art, soft shading. Animations needed: - Row 1: idle (4 frames, subtle breathing/hair sway) - Row 2: talking (4 frames, slight body bounce, mouth movement implied) - Row 3: thinking (4 frames, head tilt, finger to chin) - Row 4: happy (4 frames, small jump or wave) Sprite size: 64x64px per frame, 4x4 grid = 256x256px total. Transparent background. Facing front. Clean outlines.",
+    "prompt": "Pixel art sprite sheet, anime girl character, long golden blonde hair  reaching to knees, dark black dress/coat, black boots, pale skin,  small frame, cute face with amber eyes.  Style: 16-bit RPG anime, clean pixel art, soft shading. Animations needed: - Row 1: idle (4 frames, subtle breathing/hair sway) - Row 2: talking (4 frames, slight body bounce, mouth movement implied) - Row 3: thinking (4 frames, head tilt, finger to chin) - Row 4: happy (4 frames, small jump or wave) Sprite size: 64x64px per frame, 4x4 grid = 256x256px total. Transparent background. Facing front. Clean outlines.",
+    "size": {
+      "width": 92,
+      "height": 92
+    },
+    "template_id": "mannequin",
+    "directions": 8,
+    "view": "low top-down",
+    "created_at": "2026-05-06T19:26:10.920053+00:00"
+  },
+  "frames": {
+    "rotations": {
+      "south": "rotations/south.png",
+      "south-east": "rotations/south-east.png",
+      "east": "rotations/east.png",
+      "north-east": "rotations/north-east.png",
+      "north": "rotations/north.png",
+      "north-west": "rotations/north-west.png",
+      "west": "rotations/west.png",
+      "south-west": "rotations/south-west.png"
+    },
+    "animations": {
+      "Gentle_idle_breathing_animation._Character_subtly-6dd229f1": {
+        "south": [
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_000.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_001.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_002.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_003.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_004.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_005.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_006.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_007.png",
+          "animations/Gentle_idle_breathing_animation._Character_subtly-6dd229f1/south/frame_008.png"
+        ]
+      }
+    }
+  },
+  "export_version": "2.0",
+  "export_date": "2026-05-06T19:49:13.333861"
+}

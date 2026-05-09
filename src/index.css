@@ -1,0 +1,343 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  background: transparent !important;
+  width: 200px;
+  height: 280px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.app-container {
+  width: 200px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 4px;
+  background: transparent;
+  gap: 2px;
+  position: relative;
+}
+
+.character-wrapper {
+  cursor: pointer;
+}
+
+.selector-overlay {
+  width: 200px;
+  height: 280px;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.selector-title {
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  text-align: center;
+}
+
+.selector-cards {
+  display: flex;
+  gap: 10px;
+}
+
+.selector-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1.5px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.15s;
+}
+
+.selector-card:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.selector-card span {
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #fffef0;
+  border: 2px solid #222;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  max-height: 80px;
+  min-height: 32px;
+  overflow-y: auto;
+  width: 182px;
+  line-height: 1.45;
+  color: #222;
+  z-index: 10;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  scrollbar-width: thin;
+}
+
+.speech-bubble::-webkit-scrollbar {
+  width: 4px;
+}
+
+.speech-bubble::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 2px;
+}
+
+/* Flecha del globo apuntando hacia abajo (al personaje) */
+.speech-bubble__arrow {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid #222;
+}
+
+.speech-bubble__arrow::after {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 11px solid #fffef0;
+}
+
+.chat-row {
+  display: flex;
+  gap: 4px;
+}
+
+.chat-input {
+  width: 140px;
+  height: 26px;
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  border: 1.5px solid #555;
+  border-radius: 4px;
+  padding: 0 6px;
+  background: rgba(255,255,255,0.9);
+  color: #111;
+  outline: none;
+}
+
+.chat-input:focus { border-color: #222; }
+
+.send-btn {
+  width: 34px;
+  height: 26px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.send-btn:hover { background: #444; }
+.send-btn:active { transform: scale(0.95); }
+
+/* Panel de Configuración */
+.config-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 280px;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.config-panel {
+  background: #f5f5f5;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  width: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+}
+
+.config-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+}
+
+.config-panel__header h3 {
+  margin: 0;
+  font-size: 11px;
+  color: #333;
+}
+
+.config-panel__close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+}
+
+.config-panel__status {
+  padding: 4px;
+  background: #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.config-panel__field {
+  margin-bottom: 6px;
+}
+
+.config-panel__field label {
+  display: block;
+  margin-bottom: 2px;
+  color: #444;
+  font-weight: bold;
+}
+
+.config-panel__field input,
+.config-panel__field select {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  box-sizing: border-box;
+}
+
+.config-panel__save {
+  width: 100%;
+  padding: 6px;
+  margin-top: 8px;
+  background: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+}
+
+.config-panel__save:hover {
+  background: #357abd;
+}
+
+.config-panel__close-app {
+  width: 100%;
+  padding: 6px;
+  margin-top: 6px;
+  background: #d94a4a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+}
+
+.config-panel__close-app:hover {
+  background: #c0392b;
+}
+
+/* Indicador de estado de IA */
+.ai-status {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Secciones del panel */
+.config-panel__section {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #ccc;
+}
+
+.config-panel__section-title {
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.config-panel__status-small {
+  font-size: 9px;
+  color: #888;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.config-panel__test {
+  width: 100%;
+  padding: 4px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 9px;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+
+.config-panel__test:hover {
+  background: #5a6268;
+}
+
+.config-panel__help {
+  font-size: 9px;
+  color: #666;
+  margin: 8px 0;
+  line-height: 1.3;
+}
+
+.config-panel__help a {
+  color: #4a90d9;
+  text-decoration: none;
+}
